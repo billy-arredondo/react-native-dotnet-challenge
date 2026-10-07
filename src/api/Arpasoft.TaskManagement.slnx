@@ -1,5 +1,7 @@
 <Solution>
-  <Folder Name="/Api/" />
+  <Folder Name="/Api/">
+    <Project Path="Arpasoft.TaskManagement.Api/Arpasoft.TaskManagement.Api.csproj" Id="80dbce5a-c582-4b86-a0c8-cf59d0fa5485" />
+  </Folder>
   <Folder Name="/Application/">
     <Project Path="Arpasoft.TaskManagement.Application/Arpasoft.TaskManagement.Application.csproj" Id="59a2961f-619c-446e-be01-d919578afc5a" />
   </Folder>

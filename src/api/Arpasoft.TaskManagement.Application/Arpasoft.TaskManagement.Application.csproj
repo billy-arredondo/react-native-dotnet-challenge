@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Arpasoft.TaskManagement.Domain\Arpasoft.TaskManagement.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
