@@ -22,12 +22,12 @@ No se implementará autenticación, multiusuario ni operaciones de creación, ed
 
 ## 3. Implementar el backend
 
-- Crear la solución .NET bajo `src/backend/`.
+- Crear la solución .NET bajo `src/api/` (`Arpasoft.TaskManagement.slnx`).
 - Mantener las capas Domain, Application, Infrastructure y Api con sus dependencias unidireccionales.
 - Implementar el acceso a SQL Server mediante Dapper y procedimientos almacenados.
 - Exponer únicamente los endpoints necesarios para listado, filtros y detalle.
 - Configurar inyección de dependencias, configuración, OpenAPI y un endpoint de health check.
-- Agregar pruebas unitarias para lógica de aplicación significativa.
+- Agregar un proyecto de tests por cada capa del backend (Domain, Application, Infrastructure y Api) y pruebas unitarias para lógica de aplicación significativa.
 
 Validaciones previstas:
 

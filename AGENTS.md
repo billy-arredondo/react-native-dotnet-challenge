@@ -16,9 +16,9 @@
 - Do not use React Native UI Kits.
 - Keep TypeScript strict.
 - Avoid speculative abstractions.
-- Add tests for meaningful business logic.
+- Add tests for meaningful business logic. Each backend layer (Domain, Application, Infrastructure, Api) has its own test project.
 - Follow existing naming and project conventions.
-- Keep backend and mobile projects under `src/backend/` and `src/mobile/`.
+- Keep backend and mobile projects under `src/api/` and `src/mobile/`.
 - Update the README and relevant documentation when setup, architecture, or technical decisions change.
 - Do not implement functionality beyond the requested scope.
 - Use Conventional Commits when suggesting commit messages.

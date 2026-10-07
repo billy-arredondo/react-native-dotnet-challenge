@@ -16,7 +16,7 @@ Esta versión contiene el scaffolding preliminar para un desafío técnico de ge
 ## Estructura
 
 ```text
-src/backend/    Proyecto .NET futuro
+src/api/        Proyecto .NET (Arpasoft.TaskManagement.slnx)
 src/mobile/     Proyecto React Native futuro
 database/       Scripts SQL Server futuros
 docs/           Documentación del proyecto

@@ -28,6 +28,8 @@ La aplicación mobile consumirá únicamente la API REST. La API coordinará los
 ## Decisiones iniciales
 
 - Se utilizará .NET 10 Web API.
+- La solución backend vive en `src/api/` y usa el formato `.slnx`.
+- Los proyectos usan el prefijo `Arpasoft.TaskManagement`.
 - Se utilizará SQL Server con procedimientos almacenados.
 - Se utilizará Dapper en lugar de Entity Framework porque el requisito del reto pide procedimientos almacenados y el alcance de persistencia es pequeño.
 - No se incorporarán CQRS, MediatR, Redux ni un UI Kit sin una necesidad demostrada.
@@ -38,12 +40,17 @@ La aplicación mobile consumirá únicamente la API REST. La API coordinará los
 
 ```text
 src/
-├── backend/
-│   ├── src/
-│   │   ├── TaskManagement.Domain/
-│   │   ├── TaskManagement.Application/
-│   │   ├── TaskManagement.Infrastructure/
-│   │   └── TaskManagement.Api/
-│   └── tests/
+├── api/
+│   ├── Arpasoft.TaskManagement.slnx
+│   ├── Arpasoft.TaskManagement.Domain/
+│   ├── Arpasoft.TaskManagement.Application/
+│   ├── Arpasoft.TaskManagement.Infrastructure/
+│   ├── Arpasoft.TaskManagement.Api/
+│   ├── Arpasoft.TaskManagement.Domain.Tests/
+│   ├── Arpasoft.TaskManagement.Application.Tests/
+│   ├── Arpasoft.TaskManagement.Infrastructure.Tests/
+│   └── Arpasoft.TaskManagement.Api.Tests/
 └── mobile/
 ```
+
+Cada capa del backend (`Domain`, `Application`, `Infrastructure` y `Api`) tiene su propio proyecto de tests.
