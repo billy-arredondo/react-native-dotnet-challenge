@@ -1,0 +1,33 @@
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Editor and IDE files
+.idea/
+.vscode/
+*.user
+*.suo
+
+# .NET outputs
+**/bin/
+**/obj/
+
+# Node and React Native dependencies/build outputs
+**/node_modules/
+**/.bundle/
+**/coverage/
+**/dist/
+**/build/
+**/.gradle/
+**/android/.cxx/
+**/android/app/build/
+**/ios/Pods/
+**/ios/build/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
