@@ -96,6 +96,10 @@ La implementación mobile comenzará después de integrar el backend y la base d
 ### 10.1 Bootstrap
 
 - Crear la aplicación React Native CLI dentro de `src/mobile/` con TypeScript.
+- Verificar Node.js/npm, JDK 17 y Android Studio.
+- Instalar desde Android Studio el Android SDK, una SDK Platform compatible, Build Tools, Platform-Tools, Emulator y Command-line Tools.
+- Configurar `JAVA_HOME`, `ANDROID_HOME`, `ANDROID_SDK_ROOT` y el `PATH` del SDK.
+- Crear y verificar un Android Virtual Device (AVD).
 - Configurar Android/iOS y una URL de API por entorno.
 - Verificar conectividad con `GET /health` y `GET /tasks`.
 

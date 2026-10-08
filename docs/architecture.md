@@ -146,3 +146,7 @@ src/
 ## Configuración local
 
 La API no crea la base de datos. Requiere una instancia SQL Server accesible, la base `TaskManagement` y los scripts de `database/` ejecutados en orden. La cadena de conexión local debe configurarse con User Secrets o variables de entorno; `appsettings.json` solo conserva un valor de ejemplo. El detalle paso a paso está en `README.md`.
+
+Para desarrollar y ejecutar la aplicación mobile en Android se requiere Node.js/npm, JDK 17 y Android Studio. Android Studio debe tener instalado el Android SDK, una SDK Platform compatible con el template de React Native, Build Tools, Platform-Tools, Emulator y Command-line Tools. También se necesita un Android Virtual Device (AVD).
+
+En Windows, configurar `JAVA_HOME`, `ANDROID_HOME`, `ANDROID_SDK_ROOT` y añadir al `PATH` el JDK, `platform-tools`, `emulator` y `cmdline-tools/latest/bin`. La validación mínima es `java -version`, `adb version` y `emulator -list-avds`. Para iOS se requiere macOS con Xcode.

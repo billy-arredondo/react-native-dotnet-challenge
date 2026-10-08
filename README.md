@@ -48,6 +48,41 @@ GET /health
 - SDK de .NET 10.
 - Instancia SQL Server accesible para ejecución local.
 - Docker Engine activo solo para las pruebas de integración de Infrastructure.
+- Node.js y npm para el proyecto mobile.
+- JDK 17 para compilar la parte Android de React Native.
+- Android Studio con Android SDK, SDK Platform, Build Tools, Platform-Tools, Emulator y Command-line Tools.
+- Un Android Virtual Device (AVD) creado desde Android Studio para ejecutar la aplicación en un emulador.
+
+Para iOS se requiere macOS con Xcode; el desarrollo y validación local en Windows se realizará sobre Android.
+
+### Configuración del entorno mobile Android
+
+Configurar estas variables de entorno de usuario, adaptando las rutas a la instalación local:
+
+```text
+JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-17...
+ANDROID_HOME=C:\Users\<usuario>\AppData\Local\Android\Sdk
+ANDROID_SDK_ROOT=C:\Users\<usuario>\AppData\Local\Android\Sdk
+```
+
+Añadir al `PATH`:
+
+```text
+%JAVA_HOME%\bin
+%ANDROID_HOME%\platform-tools
+%ANDROID_HOME%\emulator
+%ANDROID_HOME%\cmdline-tools\latest\bin
+```
+
+Verificar la instalación desde una nueva terminal:
+
+```text
+java -version
+adb version
+emulator -list-avds
+```
+
+`java -version` debe mostrar JDK 17. `emulator -list-avds` debe mostrar al menos un dispositivo virtual. Si no aparece ninguno, crear un AVD desde **Android Studio > Device Manager**. Si `sdkmanager` no está disponible, instalar **Android SDK Command-line Tools** desde **Android Studio > SDK Manager**.
 
 ## Configuración local del backend
 
