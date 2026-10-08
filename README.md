@@ -39,11 +39,27 @@ GET /health
 
 ## Prerrequisitos
 
-Para el backend se requiere el SDK de .NET 10. Para ejecutar las pruebas de integración se requiere Docker Engine activo.
+- SDK de .NET 10.
+- Instancia SQL Server accesible para ejecución local.
+- Docker Engine activo solo para las pruebas de integración de Infrastructure.
 
-## Configuración
+## Configuración local del backend
 
-Restaurar, compilar y ejecutar las pruebas desde la raíz del repositorio:
+1. Crear la base de datos `TaskManagement` en la instancia SQL Server local.
+2. Ejecutar los scripts de `database/` en orden contra esa base:
+   - `001_schema.sql`
+   - `002_stored_procedures.sql`
+   - `003_seed.sql`
+3. Configurar la cadena de conexión local sin commitear credenciales. El valor de `appsettings.json` es solo un ejemplo. Preferir User Secrets para el proyecto Api:
+
+```text
+dotnet user-secrets init --project src/api/Arpasoft.TaskManagement.Api
+dotnet user-secrets set "ConnectionStrings:TaskManagement" "Server=localhost;Database=TaskManagement;User Id=sa;Password=<tu-password>;TrustServerCertificate=True;" --project src/api/Arpasoft.TaskManagement.Api
+```
+
+También puede usarse la variable de entorno `ConnectionStrings__TaskManagement` con el mismo formato.
+
+4. Restaurar, compilar y ejecutar las pruebas desde la raíz del repositorio:
 
 ```text
 dotnet restore src/api/Arpasoft.TaskManagement.slnx
@@ -52,6 +68,16 @@ dotnet test src/api/Arpasoft.TaskManagement.slnx
 ```
 
 Las pruebas de Infrastructure crean automáticamente un container SQL Server, ejecutan los scripts de `database/` y lo eliminan al finalizar.
+
+5. Ejecutar la API con el perfil `https` y verificar:
+
+```text
+https://localhost:7019/health
+https://localhost:7019/tasks?page=1&pageSize=20
+https://localhost:7019/openapi/v1.json
+```
+
+La raíz `https://localhost:7019/` no tiene endpoint asignado y devuelve 404. El health check no valida SQL Server; los endpoints de tareas requieren base, procedimientos y seed creados.
 
 ## Decisiones arquitectónicas
 

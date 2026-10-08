@@ -4,24 +4,54 @@ Esta fase implementa únicamente el backend y la base de datos. El backend será
 
 ## Flujo de comunicación
 
-```text
-React Native App (fase posterior)
-      ↓ HTTP/JSON
-Arpasoft.TaskManagement.Api
-      ↓ ISender
-Application (CQRS/MediatR)
-      ↓ interfaces
-Infrastructure
-      ↓ Dapper / Stored Procedures
-SQL Server
+```mermaid
+flowchart LR
+    App["React Native App<br/>(fase posterior)"] -->|HTTP / JSON| Api["Arpasoft.TaskManagement.Api"]
+    Api -->|ISender| Application["Application<br/>(CQRS / MediatR)"]
+    Application -->|interfaces| Infrastructure["Infrastructure"]
+    Infrastructure -->|Dapper / Stored Procedures| Db[("SQL Server")]
+```
+
+```mermaid
+sequenceDiagram
+    participant App as React Native App
+    participant API as TaskManagement API
+    participant Handler as Query Handler
+    participant Repo as SQL Repository
+    participant DB as SQL Server
+
+    App->>API: GET /tasks / GET /tasks/{id}
+    API->>Handler: Send query (MediatR ISender)
+    Handler->>Repo: ITaskReadRepository
+    Repo->>DB: Stored procedure (Dapper)
+    DB-->>Repo: Rows + total
+    Repo-->>Handler: Domain / DTO result
+    Handler-->>API: PagedResult / TaskItemDto
+    API-->>App: 200 JSON / ProblemDetails
 ```
 
 La aplicación mobile consumirá únicamente la API REST. La API coordinará los casos de uso de Application; Infrastructure será la única capa responsable de acceder a SQL Server.
 
 ## Capas del backend
 
+```mermaid
+flowchart TB
+    Api["Api<br/>Controllers, DI, OpenAPI, health"]
+    Application["Application<br/>Queries, handlers, DTOs"]
+    Pagination["Common/Pagination<br/>PagedResult"]
+    Domain["Domain<br/>TaskItem, enums, reglas"]
+    Infra["Infrastructure<br/>Dapper, SQL Server"]
+    Db[("SQL Server<br/>Stored procedures")]
+
+    Api --> Application
+    Api --> Infra
+    Application --> Pagination
+    Application --> Domain
+    Infra --> Db
+```
+
 - **Domain**: entidad `TaskItem`, valores controlados y reglas de negocio independientes de frameworks y persistencia.
-- **Application**: queries, handlers MediatR, DTOs, paginación e interfaces de lectura. Solo depende de Domain y MediatR.
+- **Application**: queries, handlers MediatR, DTOs e interfaces de lectura. Solo depende de Domain y MediatR. La paginación genérica vive en `Common/Pagination` para no acoplarla al caso de uso de tareas.
 - **Infrastructure**: implementación de interfaces de Application, conexiones SQL y ejecución de stored procedures mediante Dapper.
 - **Api**: HTTP, configuración, inyección de dependencias, OpenAPI, health check y controllers delgados.
 
@@ -76,6 +106,8 @@ src/
 │   ├── Arpasoft.TaskManagement.slnx
 │   ├── Arpasoft.TaskManagement.Domain/
 │   ├── Arpasoft.TaskManagement.Application/
+│   │   ├── Tasks/
+│   │   └── Common/Pagination/PagedResult.cs
 │   ├── Arpasoft.TaskManagement.Infrastructure/
 │   ├── Arpasoft.TaskManagement.Api/
 │   ├── Arpasoft.TaskManagement.Domain.Tests/
@@ -84,3 +116,7 @@ src/
 │   └── Arpasoft.TaskManagement.Api.Tests/
 └── mobile/ (fase posterior)
 ```
+
+## Configuración local
+
+La API no crea la base de datos. Requiere una instancia SQL Server accesible, la base `TaskManagement` y los scripts de `database/` ejecutados en orden. La cadena de conexión local debe configurarse con User Secrets o variables de entorno; `appsettings.json` solo conserva un valor de ejemplo. El detalle paso a paso está en `README.md`.
