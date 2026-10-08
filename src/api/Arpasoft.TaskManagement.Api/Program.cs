@@ -1,23 +1,37 @@
-var builder = WebApplication.CreateBuilder(args);
+namespace Arpasoft.TaskManagement.Api;
 
-// Add services to the container.
+using System.Text.Json.Serialization;
+using Arpasoft.TaskManagement.Application;
+using Arpasoft.TaskManagement.Infrastructure;
 
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+public sealed class Program
 {
-    app.MapOpenApi();
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+
+        var connectionString = builder.Configuration.GetConnectionString("TaskManagement")
+            ?? throw new InvalidOperationException("Connection string 'TaskManagement' was not configured.");
+
+        builder.Services.AddApplication();
+        builder.Services.AddInfrastructure(connectionString);
+        builder.Services.AddHealthChecks();
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+        builder.Services.AddOpenApi();
+
+        var app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.MapOpenApi();
+        }
+
+        app.UseHttpsRedirection();
+        app.MapControllers();
+        app.MapHealthChecks("/health");
+
+        app.Run();
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
