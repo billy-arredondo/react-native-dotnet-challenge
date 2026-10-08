@@ -1,11 +1,17 @@
 # Database
 
-Esta carpeta reservará el espacio para los recursos de SQL Server.
+Scripts de SQL Server para la fase backend del reto.
 
-Más adelante se agregarán scripts para:
+## Orden de ejecución
 
-- Esquema de base de datos
-- Datos iniciales
-- Stored procedures
+Ejecutar los scripts contra la base de datos seleccionada en este orden:
 
-No se ha creado todavía ningún esquema ni script de persistencia.
+1. `001_schema.sql`
+2. `002_stored_procedures.sql`
+3. `003_seed.sql`
+
+Los scripts están diseñados para ejecutarse repetidamente sin duplicar el esquema, los procedimientos ni los datos de seed.
+
+La aplicación usará únicamente los stored procedures de lectura. La generación de `uniqueidentifier` para futuros inserts se configura con `NEWSEQUENTIALID()`.
+
+Las pruebas de integración de Infrastructure ejecutarán estos mismos scripts dentro de un container SQL Server administrado por Testcontainers.
