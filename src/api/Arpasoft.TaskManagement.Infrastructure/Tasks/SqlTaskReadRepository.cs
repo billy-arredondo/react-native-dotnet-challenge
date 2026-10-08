@@ -1,10 +1,10 @@
 namespace Arpasoft.TaskManagement.Infrastructure.Tasks;
 
-using System.Data;
 using Arpasoft.TaskManagement.Application.Common.Pagination;
 using Arpasoft.TaskManagement.Application.Tasks;
 using Arpasoft.TaskManagement.Domain.Tasks;
 using Dapper;
+using System.Data;
 
 public sealed class SqlTaskReadRepository(SqlConnectionFactory connectionFactory)
     : ITaskReadRepository

@@ -1,8 +1,8 @@
 namespace Arpasoft.TaskManagement.Api;
 
-using System.Text.Json.Serialization;
 using Arpasoft.TaskManagement.Application;
 using Arpasoft.TaskManagement.Infrastructure;
+using System.Text.Json.Serialization;
 
 public sealed class Program
 {

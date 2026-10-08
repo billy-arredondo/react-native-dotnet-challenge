@@ -1,6 +1,5 @@
 namespace Arpasoft.TaskManagement.Application.Tasks.GetTaskById;
 
-using Arpasoft.TaskManagement.Application.Tasks.GetTasks;
 using MediatR;
 
 public sealed class GetTaskByIdQueryHandler(ITaskReadRepository repository)

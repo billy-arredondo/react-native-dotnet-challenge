@@ -1,7 +1,7 @@
 namespace Arpasoft.TaskManagement.Infrastructure.Tests;
 
-using System.Text.RegularExpressions;
 using Microsoft.Data.SqlClient;
+using System.Text.RegularExpressions;
 using Testcontainers.MsSql;
 
 [CollectionDefinition(Name)]

@@ -1,6 +1,5 @@
 namespace Arpasoft.TaskManagement.Application;
 
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 public static class DependencyInjection
