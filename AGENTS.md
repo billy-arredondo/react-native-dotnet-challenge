@@ -11,7 +11,7 @@
 - Database access must remain isolated in Infrastructure.
 - SQL Server stored procedures will be used for persistence.
 - Do not introduce Entity Framework unless explicitly requested.
-- Do not introduce CQRS/MediatR unless there is a demonstrated need.
+- CQRS/MediatR is approved for the backend read use cases; do not add commands or CQRS infrastructure outside the required scope.
 - Do not introduce Redux unless application state complexity requires it.
 - Do not use React Native UI Kits.
 - Keep TypeScript strict.
@@ -20,6 +20,7 @@
 - Follow existing naming and project conventions.
 - Keep backend and mobile projects under `src/api/` and `src/mobile/`.
 - Update the README and relevant documentation when setup, architecture, or technical decisions change.
+- During the current phase, work only on the backend and database; defer mobile implementation until this phase is integrated into `main`.
 - Do not implement functionality beyond the requested scope.
 - Use Conventional Commits when suggesting commit messages.
 - Never execute git commits unless explicitly requested.

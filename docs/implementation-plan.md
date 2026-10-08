@@ -1,73 +1,90 @@
 # Implementation Plan
 
-Plan incremental para implementar el reto descrito en `docs/technical-challenge.md`.
+Esta fase cubre exclusivamente backend y base de datos. La aplicación mobile se implementará después de validar e integrar esta fase en `main`.
 
-## 1. Definir el contrato funcional
+## 1. Contrato y documentación
 
-- Confirmar el modelo mínimo `Task`: título, descripción, prioridad y estado.
-- Definir los valores permitidos para prioridad y estado.
-- Definir las operaciones necesarias:
-  - `GET /tasks`, con filtros opcionales `status` y `priority`.
-  - `GET /tasks/{id}`, para consultar el detalle.
-- Acordar las respuestas para lista vacía, filtros sin resultados y tarea inexistente.
+- Modelar `TaskItem` con `Guid`, título, descripción, prioridad, estado y `CreatedAt` UTC.
+- Usar `Low`, `Medium`, `High`, `Critical` para prioridad.
+- Usar `Todo`, `InProgress`, `Done` para estado.
+- Implementar filtros múltiples separados por comas.
+- Implementar `page=1`, `pageSize=20`, con máximo de `100`.
+- Ordenar por prioridad, fecha de creación y `Id`.
+- Usar `ProblemDetails` para errores HTTP.
 
-## 2. Preparar la base de datos
+## 2. Proyectos de tests
 
-- Crear el script de esquema en `database/`.
-- Crear datos iniciales representativos.
-- Crear procedimientos almacenados para listar/filtrar y consultar el detalle.
-- Documentar cómo ejecutar los scripts en SQL Server.
-
-No se implementará autenticación, multiusuario ni operaciones de creación, edición o eliminación.
-
-## 3. Implementar el backend
-
-- Crear la solución .NET bajo `src/api/` (`Arpasoft.TaskManagement.slnx`).
-- Mantener las capas Domain, Application, Infrastructure y Api con sus dependencias unidireccionales.
-- Implementar el acceso a SQL Server mediante Dapper y procedimientos almacenados.
-- Exponer únicamente los endpoints necesarios para listado, filtros y detalle.
-- Configurar inyección de dependencias, configuración, OpenAPI y un endpoint de health check.
-- Agregar un proyecto de tests por cada capa del backend (Domain, Application, Infrastructure y Api) y pruebas unitarias para lógica de aplicación significativa.
-
-Validaciones previstas:
+Crear y agregar a `Arpasoft.TaskManagement.slnx` cuatro proyectos xUnit:
 
 ```text
-dotnet restore
-dotnet build
-dotnet test
+Arpasoft.TaskManagement.Domain.Tests
+Arpasoft.TaskManagement.Application.Tests
+Arpasoft.TaskManagement.Infrastructure.Tests
+Arpasoft.TaskManagement.Api.Tests
 ```
 
-## 4. Implementar la aplicación mobile
+Cada proyecto verificará su capa sin saltarse los límites de Clean Architecture.
 
-- Crear la aplicación React Native CLI con TypeScript bajo `src/mobile/`.
-- Mantener una estructura separada para API, componentes, hooks, navegación, pantallas, tema y tipos.
-- Implementar la lista de tareas.
-- Implementar filtros por estado y prioridad.
-- Implementar la vista de detalle.
-- Manejar estados de carga, error, lista vacía y ausencia de resultados.
-- Mantener la UI propia, sin React Native UI Kits.
+## 3. Domain
 
-Validaciones previstas:
+- Crear `TaskItem`, `TaskPriority` y `TaskItemStatus`.
+- Validar identificador, título, descripción, enums y fecha UTC.
+- Agregar pruebas unitarias para las invariantes.
+- Mantener Domain independiente de MediatR, HTTP y SQL Server.
+
+## 4. Application con CQRS/MediatR
+
+- Crear `GetTasksQuery` y `GetTasksQueryHandler`.
+- Crear `GetTaskByIdQuery` y `GetTaskByIdQueryHandler`.
+- Crear DTOs, resultado paginado e interfaz de lectura.
+- Validar filtros y paginación en Application.
+- Propagar `CancellationToken`.
+- Probar handlers con repositorios simulados.
+
+## 5. Database
+
+Crear scripts en `database/` para:
+
+- Esquema de tareas y restricciones.
+- Seed reproducible.
+- Stored procedure de listado, filtros, paginación y conteo.
+- Stored procedure de detalle.
+
+Usar `uniqueidentifier`, `NEWSEQUENTIALID()` y fechas UTC. Los filtros deben ser parametrizados y no concatenar SQL.
+
+## 6. Infrastructure
+
+- Agregar Dapper y `Microsoft.Data.SqlClient`.
+- Implementar la interfaz de lectura con stored procedures.
+- Configurar conexiones mediante `IConfiguration`.
+- Crear pruebas de integración con `Testcontainers.MsSql`.
+- Ejecutar esquema, procedimientos y seed desde la fixture de tests.
+- Verificar filtros, orden, paginación, conteo, detalle y mapeo.
+
+Docker Engine debe estar activo para ejecutar las pruebas de integración.
+
+## 7. Api
+
+- Registrar MediatR, Application e Infrastructure en DI.
+- Crear `TasksController` usando `ISender`.
+- Exponer `GET /tasks` y `GET /tasks/{id}`.
+- Configurar serialización de enums como strings.
+- Configurar `400 ProblemDetails`, `404 ProblemDetails`, OpenAPI y health check.
+- Agregar pruebas del contrato HTTP.
+
+## 8. Validación de backend
 
 ```text
-npm ci
-npx tsc --noEmit
-npm run lint
-npm test
+dotnet restore src/api/Arpasoft.TaskManagement.slnx
+dotnet build src/api/Arpasoft.TaskManagement.slnx
+dotnet test src/api/Arpasoft.TaskManagement.slnx
 ```
 
-## 5. Documentar y revisar
+Las pruebas de Infrastructure requieren Docker Engine. Si Docker no está disponible, esa limitación debe reportarse explícitamente.
 
-- Actualizar `README.md` con prerrequisitos, configuración y ejecución.
-- Mantener `docs/architecture.md` actualizado con diagramas y decisiones técnicas.
-- Verificar que el flujo completo sea `App -> API -> DB`.
-- Revisar que no se hayan añadido funcionalidades fuera del alcance.
-- Usar commits pequeños con Conventional Commits.
+## 9. Cierre de la fase
 
-## Orden recomendado
-
-1. Contrato funcional.
-2. Base de datos y procedimientos almacenados.
-3. Backend y pruebas.
-4. Aplicación mobile.
-5. Documentación, revisión y validación final.
+- Actualizar README con setup de .NET, SQL Server y Docker para tests.
+- Documentar decisiones y comandos reproducibles.
+- Verificar que no se haya implementado frontend ni funcionalidades fuera del alcance.
+- Integrar la fase backend/DB en `main` antes de iniciar mobile.

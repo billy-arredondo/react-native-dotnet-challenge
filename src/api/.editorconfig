@@ -1,0 +1,15 @@
+root = true
+
+[*.cs]
+
+# Require file-scoped namespaces as the first declaration.
+csharp_style_namespace_declarations = file_scoped:error
+dotnet_diagnostic.IDE0161.severity = error
+
+# Require using directives inside the file-scoped namespace.
+csharp_using_directive_placement = inside_namespace:error
+dotnet_diagnostic.IDE0065.severity = error
+
+# Keep the requested line ending for source files.
+end_of_line = crlf
+insert_final_newline = true

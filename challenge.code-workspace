@@ -2,11 +2,15 @@
   "folders": [
     {
       "path": ".",
+      "name": "challenge",
+    },
+    {
+      "path": "src/mobile",
     },
   ],
   "settings": {
     "files.exclude": {
-      "**/src/api": true,
+      "**/src": true,
     },
   },
 }

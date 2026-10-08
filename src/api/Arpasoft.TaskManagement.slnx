@@ -1,14 +1,18 @@
 <Solution>
   <Folder Name="/Api/">
+    <Project Path="Arpasoft.TaskManagement.Api.Tests/Arpasoft.TaskManagement.Api.Tests.csproj" />
     <Project Path="Arpasoft.TaskManagement.Api/Arpasoft.TaskManagement.Api.csproj" Id="80dbce5a-c582-4b86-a0c8-cf59d0fa5485" />
   </Folder>
   <Folder Name="/Application/">
+    <Project Path="Arpasoft.TaskManagement.Application.Tests/Arpasoft.TaskManagement.Application.Tests.csproj" />
     <Project Path="Arpasoft.TaskManagement.Application/Arpasoft.TaskManagement.Application.csproj" Id="59a2961f-619c-446e-be01-d919578afc5a" />
   </Folder>
   <Folder Name="/Domain/">
+    <Project Path="Arpasoft.TaskManagement.Domain.Tests/Arpasoft.TaskManagement.Domain.Tests.csproj" />
     <Project Path="Arpasoft.TaskManagement.Domain/Arpasoft.TaskManagement.Domain.csproj" Id="5e8bf453-67cf-4e44-96c6-d48f8d30b102" />
   </Folder>
   <Folder Name="/Infrastructure/">
+    <Project Path="Arpasoft.TaskManagement.Infrastructure.Tests/Arpasoft.TaskManagement.Infrastructure.Tests.csproj" />
     <Project Path="Arpasoft.TaskManagement.Infrastructure/Arpasoft.TaskManagement.Infrastructure.csproj" Id="500d3fab-4526-48a1-b954-fee9fd50dc10" />
   </Folder>
 </Solution>
