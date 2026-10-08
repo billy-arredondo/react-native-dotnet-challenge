@@ -25,6 +25,8 @@ database/       Esquema, seed y stored procedures SQL Server
 docs/           Documentación del proyecto
 ```
 
+Al abrir `challenge.code-workspace` en VS Code, la raíz se muestra como `challenge` y `src/mobile` aparece como carpeta separada (`src` está excluido de la vista principal).
+
 ## Alcance
 
 La aplicación permite listar tareas, filtrarlas por estado y prioridad, paginarlas y consultar su detalle. No se contemplan autenticación, multiusuario, CRUD completo, despliegue ni CI/CD.
