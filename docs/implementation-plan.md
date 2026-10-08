@@ -88,3 +88,35 @@ Las pruebas de Infrastructure requieren Docker Engine. Si Docker no está dispon
 - Documentar decisiones y comandos reproducibles.
 - Verificar que no se haya implementado frontend ni funcionalidades fuera del alcance.
 - Integrar la fase backend/DB en `main` antes de iniciar mobile.
+
+## 10. Mobile después de la integración
+
+La implementación mobile comenzará después de integrar el backend y la base de datos en `main`.
+
+### 10.1 Bootstrap
+
+- Crear la aplicación React Native CLI dentro de `src/mobile/` con TypeScript.
+- Configurar Android/iOS y una URL de API por entorno.
+- Verificar conectividad con `GET /health` y `GET /tasks`.
+
+### 10.2 Base técnica
+
+- Configurar React Navigation.
+- Configurar TanStack Query para el estado remoto.
+- Añadir Zustand únicamente si aparece estado local/global que no corresponda a la API.
+- Añadir `lucide-react-native` para iconos.
+- Usar componentes nativos y estilos propios, sin React Native UI Kits.
+
+### 10.3 Features
+
+- Implementar la lista paginada de tareas.
+- Implementar filtros por estado y prioridad.
+- Implementar navegación al detalle de una tarea.
+- Cubrir estados de carga, vacío, error y reintento.
+- Mantener el cliente alineado con los contratos de `/tasks` y `/tasks/{id}`.
+
+### 10.4 Validación mobile
+
+- Probar la aplicación en Android y, cuando esté disponible, iOS.
+- Verificar navegación, filtros, detalle, errores de red y adaptación a distintos tamaños de pantalla.
+- Actualizar README con los comandos de instalación, ejecución y configuración de la API mobile.

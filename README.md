@@ -7,6 +7,10 @@ Este repositorio implementa un desafío técnico de gestión de tareas. La fase 
 ## Tecnología
 
 - React Native CLI con TypeScript
+- React Navigation
+- TanStack Query
+- Zustand, solo si se necesita estado local/global adicional
+- `lucide-react-native`
 - .NET 10 Web API
 - SQL Server
 - REST API
@@ -84,6 +88,8 @@ La raíz `https://localhost:7019/` no tiene endpoint asignado y devuelve 404. El
 ## Decisiones arquitectónicas
 
 Las decisiones iniciales están documentadas en [`docs/architecture.md`](docs/architecture.md).
+
+La arquitectura mobile utilizará React Native CLI, React Navigation, TanStack Query y componentes nativos sin UI Kit. Zustand y Axios no se incorporarán por defecto; se añadirán solo si existe una necesidad concreta.
 
 El orden de implementación está documentado en [`docs/implementation-plan.md`](docs/implementation-plan.md).
 

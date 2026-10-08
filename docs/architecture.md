@@ -32,6 +32,31 @@ sequenceDiagram
 
 La aplicación mobile consumirá únicamente la API REST. La API coordinará los casos de uso de Application; Infrastructure será la única capa responsable de acceder a SQL Server.
 
+## Arquitectura mobile
+
+La aplicación mobile se implementará como React Native CLI con TypeScript. La arquitectura seguirá una organización por features y mantendrá separadas la navegación, la presentación, el acceso HTTP y el estado remoto.
+
+```mermaid
+flowchart TB
+    Screens["Screens / Features"] --> Navigation["React Navigation"]
+    Screens --> Queries["TanStack Query"]
+    Screens --> Components["Native UI Components"]
+    Queries --> ApiClient["HTTP Client<br/>(fetch or Axios)"]
+    ApiClient --> Api[".NET REST API"]
+    Store["Zustand<br/>(only when needed)"] -. optional local state .-> Screens
+```
+
+Decisiones mobile:
+
+- React Native CLI y TypeScript, conforme al enunciado original.
+- React Navigation para navegación; no se utilizará React Router, que está orientado a aplicaciones web.
+- TanStack Query para estado remoto, cache, loading, errores y refetch de la API.
+- Zustand queda disponible para estado local/global que no pertenezca al servidor, pero no se incorporará hasta que exista una necesidad real.
+- `lucide-react-native` para iconos.
+- Componentes nativos de React Native y estilos propios; no se utilizará un UI Kit.
+- `fetch` será suficiente para el cliente HTTP inicial. Axios se considerará solo si aporta una necesidad concreta.
+- La aplicación no duplicará reglas de negocio del backend; consumirá el contrato REST documentado.
+
 ## Capas del backend
 
 ```mermaid
@@ -97,6 +122,7 @@ Los parámetros inválidos producen `400 ProblemDetails`, una tarea inexistente 
 - Las pruebas de integración de Infrastructure usarán Testcontainers para iniciar SQL Server automáticamente cuando Docker Engine esté disponible.
 - No se implementan autenticación, multiusuario, CRUD completo, despliegue ni CI/CD en esta fase.
 - La futura evolución multiusuario podrá incorporar `OwnerId` sin introducirlo prematuramente en el alcance actual.
+- La implementación mobile se mantiene separada del backend y se iniciará después de integrar esta fase en `main`.
 
 ## Estructura
 
