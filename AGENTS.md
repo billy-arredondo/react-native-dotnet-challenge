@@ -1,5 +1,9 @@
 # Instructions for AI Coding Agents
 
+- This repository implements the task-management technical challenge described in `docs/technical-challenge.md`.
+- Keep implementation planning in `docs/implementation-plan.md` and architectural decisions in `docs/architecture.md`.
+- The required scope is listing personal tasks, filtering by status and priority, and viewing task details.
+- Do not implement authentication, full CRUD, multi-user support, deployment, or CI/CD unless explicitly requested.
 - Prefer simple solutions over unnecessary complexity.
 - Follow Clean Architecture boundaries.
 - Domain must not depend on Infrastructure or API.
@@ -12,8 +16,10 @@
 - Do not use React Native UI Kits.
 - Keep TypeScript strict.
 - Avoid speculative abstractions.
-- Add tests for meaningful business logic.
+- Add tests for meaningful business logic. Each backend layer (Domain, Application, Infrastructure, Api) has its own test project.
 - Follow existing naming and project conventions.
+- Keep backend and mobile projects under `src/api/` and `src/mobile/`.
+- Update the README and relevant documentation when setup, architecture, or technical decisions change.
 - Do not implement functionality beyond the requested scope.
 - Use Conventional Commits when suggesting commit messages.
 - Never execute git commits unless explicitly requested.
