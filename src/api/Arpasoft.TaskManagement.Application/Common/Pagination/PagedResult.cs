@@ -1,4 +1,4 @@
-namespace Arpasoft.TaskManagement.Application.Tasks;
+namespace Arpasoft.TaskManagement.Application.Common.Pagination;
 
 public sealed record PagedResult<T>(
     IReadOnlyCollection<T> Items,

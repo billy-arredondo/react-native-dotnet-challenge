@@ -1,5 +1,6 @@
 namespace Arpasoft.TaskManagement.Application.Tests.Tasks;
 
+using Arpasoft.TaskManagement.Application.Common.Pagination;
 using Arpasoft.TaskManagement.Application.Tasks;
 using Arpasoft.TaskManagement.Application.Tasks.GetTasks;
 using Arpasoft.TaskManagement.Domain.Tasks;

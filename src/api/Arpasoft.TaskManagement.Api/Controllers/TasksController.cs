@@ -1,5 +1,6 @@
 namespace Arpasoft.TaskManagement.Api.Controllers;
 
+using Arpasoft.TaskManagement.Application.Common.Pagination;
 using Arpasoft.TaskManagement.Application.Tasks;
 using Arpasoft.TaskManagement.Application.Tasks.GetTaskById;
 using Arpasoft.TaskManagement.Application.Tasks.GetTasks;

@@ -1,5 +1,6 @@
 namespace Arpasoft.TaskManagement.Application.Tasks.GetTasks;
 
+using Arpasoft.TaskManagement.Application.Common.Pagination;
 using Arpasoft.TaskManagement.Domain.Tasks;
 using MediatR;
 

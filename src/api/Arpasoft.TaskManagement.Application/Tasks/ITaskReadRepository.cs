@@ -1,5 +1,6 @@
 namespace Arpasoft.TaskManagement.Application.Tasks;
 
+using Arpasoft.TaskManagement.Application.Common.Pagination;
 using Arpasoft.TaskManagement.Domain.Tasks;
 
 public interface ITaskReadRepository

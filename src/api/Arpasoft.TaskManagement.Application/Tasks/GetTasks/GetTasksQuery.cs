@@ -1,5 +1,6 @@
 namespace Arpasoft.TaskManagement.Application.Tasks.GetTasks;
 
+using Arpasoft.TaskManagement.Application.Common.Pagination;
 using MediatR;
 
 public sealed record GetTasksQuery(
