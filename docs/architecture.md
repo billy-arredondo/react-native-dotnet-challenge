@@ -32,6 +32,31 @@ sequenceDiagram
 
 La aplicación mobile consumirá únicamente la API REST. La API coordinará los casos de uso de Application; Infrastructure será la única capa responsable de acceder a SQL Server.
 
+## Arquitectura mobile
+
+La aplicación mobile se implementará con Expo, React Native y TypeScript. La arquitectura seguirá una organización por features y mantendrá separadas la navegación, la presentación, el acceso HTTP y el estado remoto. Se utilizará Expo estándar, sin `prebuild`, porque el alcance no requiere código nativo personalizado.
+
+```mermaid
+flowchart TB
+    Screens["Screens / Features"] --> Navigation["Expo Router"]
+    Screens --> Queries["TanStack Query"]
+    Screens --> Components["Native UI Components"]
+    Queries --> ApiClient["HTTP Client<br/>(fetch or Axios)"]
+    ApiClient --> Api[".NET REST API"]
+    Store["Zustand<br/>(only when needed)"] -. optional local state .-> Screens
+```
+
+Decisiones mobile:
+
+- Expo con React Native y TypeScript. Aunque el enunciado original menciona React Native CLI, Expo es la herramienta recomendada oficialmente para iniciar aplicaciones React Native y cubre el alcance del reto sin añadir configuración nativa innecesaria.
+- Expo Router para navegación; no se utilizará React Router, que está orientado a aplicaciones web.
+- TanStack Query para estado remoto, cache, loading, errores y refetch de la API.
+- Zustand queda disponible para estado local/global que no pertenezca al servidor, pero no se incorporará hasta que exista una necesidad real.
+- `lucide-react-native` para iconos.
+- Componentes nativos de React Native y estilos propios; no se utilizará un UI Kit.
+- `fetch` será suficiente para el cliente HTTP inicial. Axios se considerará solo si aporta una necesidad concreta.
+- La aplicación no duplicará reglas de negocio del backend; consumirá el contrato REST documentado.
+
 ## Capas del backend
 
 ```mermaid
@@ -97,6 +122,7 @@ Los parámetros inválidos producen `400 ProblemDetails`, una tarea inexistente 
 - Las pruebas de integración de Infrastructure usarán Testcontainers para iniciar SQL Server automáticamente cuando Docker Engine esté disponible.
 - No se implementan autenticación, multiusuario, CRUD completo, despliegue ni CI/CD en esta fase.
 - La futura evolución multiusuario podrá incorporar `OwnerId` sin introducirlo prematuramente en el alcance actual.
+- La implementación mobile se mantiene separada del backend y consume únicamente sus contratos REST.
 
 ## Estructura
 
@@ -120,3 +146,7 @@ src/
 ## Configuración local
 
 La API no crea la base de datos. Requiere una instancia SQL Server accesible, la base `TaskManagement` y los scripts de `database/` ejecutados en orden. La cadena de conexión local debe configurarse con User Secrets o variables de entorno; `appsettings.json` solo conserva un valor de ejemplo. El detalle paso a paso está en `README.md`.
+
+Para desarrollar la aplicación mobile se requiere Node.js/npm y Expo Go para la ejecución durante el desarrollo. Android Studio, el Android SDK y un Android Virtual Device (AVD) son opcionales si se utiliza un emulador local. No se generan ni mantienen directorios nativos `android/` o `ios/` mientras el proyecto permanezca en Expo estándar.
+
+Si se utiliza un emulador Android local en Windows, configurar `JAVA_HOME`, `ANDROID_HOME`, `ANDROID_SDK_ROOT` y añadir al `PATH` el JDK, `platform-tools`, `emulator` y `cmdline-tools/latest/bin`. La validación mínima es `java -version`, `adb version` y `emulator -list-avds`. Con Expo Go esta configuración puede omitirse. Para iOS se requiere macOS con Xcode.

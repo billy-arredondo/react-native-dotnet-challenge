@@ -6,7 +6,11 @@ Este repositorio implementa un desafío técnico de gestión de tareas. La fase 
 
 ## Tecnología
 
-- React Native CLI con TypeScript
+- Expo con React Native y TypeScript
+- Expo Router
+- TanStack Query
+- Zustand, solo si se necesita estado local/global adicional
+- `lucide-react-native`
 - .NET 10 Web API
 - SQL Server
 - REST API
@@ -20,7 +24,7 @@ Este repositorio implementa un desafío técnico de gestión de tareas. La fase 
 
 ```text
 src/api/        Microservicio REST .NET (Arpasoft.TaskManagement.slnx)
-src/mobile/     Proyecto React Native futuro
+src/mobile/     Aplicación Expo/React Native
 database/       Esquema, seed y stored procedures SQL Server
 docs/           Documentación del proyecto
 ```
@@ -44,6 +48,42 @@ GET /health
 - SDK de .NET 10.
 - Instancia SQL Server accesible para ejecución local.
 - Docker Engine activo solo para las pruebas de integración de Infrastructure.
+- Node.js y npm para el proyecto mobile.
+- Expo Go para ejecutar la aplicación durante el desarrollo.
+- Android Studio y un Android Virtual Device (AVD) son opcionales si se prefiere usar un emulador local en lugar de un dispositivo físico o Expo Go.
+
+Para iOS se requiere macOS con Xcode; el desarrollo y validación local en Windows se realizará sobre Android.
+
+### Configuración opcional de Android
+
+Esta configuración solo es necesaria para ejecutar la aplicación en un emulador Android local. Si se utiliza Expo Go en un dispositivo físico, puede omitirse.
+
+Configurar estas variables de entorno de usuario, adaptando las rutas a la instalación local:
+
+```text
+JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-17...
+ANDROID_HOME=C:\Users\<usuario>\AppData\Local\Android\Sdk
+ANDROID_SDK_ROOT=C:\Users\<usuario>\AppData\Local\Android\Sdk
+```
+
+Añadir al `PATH`:
+
+```text
+%JAVA_HOME%\bin
+%ANDROID_HOME%\platform-tools
+%ANDROID_HOME%\emulator
+%ANDROID_HOME%\cmdline-tools\latest\bin
+```
+
+Verificar la instalación desde una nueva terminal:
+
+```text
+java -version
+adb version
+emulator -list-avds
+```
+
+Para usar un emulador local, `java -version` debe mostrar JDK 17 y `emulator -list-avds` debe mostrar al menos un dispositivo virtual. Si no aparece ninguno, crear un AVD desde **Android Studio > Device Manager**. Si `sdkmanager` no está disponible, instalar **Android SDK Command-line Tools** desde **Android Studio > SDK Manager**.
 
 ## Configuración local del backend
 
@@ -84,6 +124,10 @@ La raíz `https://localhost:7019/` no tiene endpoint asignado y devuelve 404. El
 ## Decisiones arquitectónicas
 
 Las decisiones iniciales están documentadas en [`docs/architecture.md`](docs/architecture.md).
+
+La arquitectura mobile utilizará Expo con React Native y TypeScript, Expo Router, TanStack Query y componentes nativos sin UI Kit. Expo se elige como la herramienta recomendada para iniciar aplicaciones React Native; el alcance actual no requiere código nativo personalizado ni `prebuild`. Zustand y Axios no se incorporarán por defecto; se añadirán solo si existe una necesidad concreta.
+
+Aunque el enunciado original menciona React Native CLI, Expo utiliza React Native oficialmente y cubre las necesidades funcionales del reto con menor configuración. Si en el futuro se requiere código nativo personalizado, el proyecto podrá evolucionar hacia un development build o utilizar `prebuild`.
 
 El orden de implementación está documentado en [`docs/implementation-plan.md`](docs/implementation-plan.md).
 
