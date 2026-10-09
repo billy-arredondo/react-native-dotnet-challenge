@@ -1,28 +1,42 @@
-import { Link, router } from 'expo-router';
+import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { TaskCard } from '../src/features/tasks/components/TaskCard';
+import { TaskFilters } from '../src/features/tasks/components/TaskFilters';
 import { useTasksQuery } from '../src/features/tasks/api/tasks.queries';
 import { useTaskFiltersStore } from '../src/features/tasks/store/task-filters.store';
 import { ScreenState } from '../src/shared/components/ScreenState';
+import { LanguageSelector } from '../src/shared/i18n/LanguageSelector';
+import { useLanguageStore } from '../src/shared/i18n/language.store';
+import { translate } from '../src/shared/i18n/translations';
 
 export default function TasksScreen() {
   const status = useTaskFiltersStore((state) => state.status);
   const priority = useTaskFiltersStore((state) => state.priority);
+  const setFilters = useTaskFiltersStore((state) => state.setFilters);
+  const language = useLanguageStore((state) => state.language);
   const [page, setPage] = useState(1);
-  const [pageFiltersKey, setPageFiltersKey] = useState('');
   const filters = useMemo(() => ({ status, priority }), [priority, status]);
-  const filterKey = `${status.join(',')}|${priority.join(',')}`;
-  const activePage = pageFiltersKey === filterKey ? page : 1;
-  const query = useTasksQuery(activePage, filters);
+  const query = useTasksQuery(page, filters);
   const filterCount = status.length + priority.length;
+  const handleFilterChange = (nextStatus: typeof status, nextPriority: typeof priority) => {
+    setPage(1);
+    setFilters({ status: nextStatus, priority: nextPriority });
+  };
+  const header = (total: number) => <View style={styles.header}>
+    <View style={styles.eyebrowRow}><Text style={styles.eyebrow}>{translate(language, 'appName')}</Text><View style={styles.headerRight}><Text style={styles.counter}>{total} {translate(language, 'total')}</Text><LanguageSelector /></View></View>
+    <Text style={styles.heading}>{translate(language, 'heading')}</Text>
+    <Text style={styles.subheading}>{translate(language, 'subheading')}</Text>
+    <View style={styles.filters}><TaskFilters status={status} priority={priority} onChange={handleFilterChange} /></View>
+    <Text style={styles.sectionLabel}>{translate(language, 'currentTasks')}</Text>
+  </View>;
 
   if (query.isPending) {
-    return <View style={styles.loading}><ActivityIndicator color="#b4552d" size="large" /></View>;
+    return <View style={styles.screen}><FlatList data={[]} renderItem={() => null} ListHeaderComponent={header(0)} ListEmptyComponent={<ActivityIndicator color="#b4552d" size="large" />} contentContainerStyle={styles.emptyList} /></View>;
   }
 
   if (query.isError) {
-    return <ScreenState title="Could not load tasks" message={query.error.message} actionLabel="Try again" onAction={() => query.refetch()} />;
+    return <View style={styles.screen}><FlatList data={[]} renderItem={() => null} ListHeaderComponent={header(0)} ListEmptyComponent={<ScreenState title={translate(language, 'couldNotLoad')} message={query.error.message} actionLabel={translate(language, 'tryAgain')} onAction={() => query.refetch()} />} contentContainerStyle={styles.emptyList} /></View>;
   }
 
   const result = query.data;
@@ -34,38 +48,19 @@ export default function TasksScreen() {
         keyExtractor={(item) => item.id}
         contentContainerStyle={result.items.length === 0 ? styles.emptyList : styles.list}
         refreshControl={<RefreshControl refreshing={query.isRefetching} onRefresh={() => query.refetch()} tintColor="#b4552d" />}
-        ListHeaderComponent={
-          <View style={styles.header}>
-            <View style={styles.eyebrowRow}>
-              <Text style={styles.eyebrow}>PERSONAL WORKBOARD</Text>
-              <Text style={styles.counter}>{result.totalItems} total</Text>
-            </View>
-            <Text style={styles.heading}>Make room for{`\n`}what matters.</Text>
-            <Text style={styles.subheading}>A focused view of your work, one task at a time.</Text>
-            <View style={styles.actions}>
-              <Link href="/filters" asChild>
-                <Pressable style={styles.filterButton} accessibilityRole="button">
-                  <Text style={styles.filterButtonText}>Filter tasks</Text>
-                  {filterCount > 0 ? <View style={styles.filterCount}><Text style={styles.filterCountText}>{filterCount}</Text></View> : null}
-                </Pressable>
-              </Link>
-              {filterCount > 0 ? <Text style={styles.activeFilters}>{filterCount} active</Text> : null}
-            </View>
-            <Text style={styles.sectionLabel}>CURRENT TASKS</Text>
-          </View>
-        }
+         ListHeaderComponent={header(result.totalItems)}
         renderItem={({ item }) => <TaskCard task={item} onPress={() => router.push({ pathname: '/task/[id]', params: { id: item.id } })} />}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        ListEmptyComponent={<ScreenState title="Nothing on the board" message="Try clearing your filters or check back after adding more tasks." actionLabel={filterCount > 0 ? 'View all tasks' : undefined} onAction={filterCount > 0 ? () => router.push('/filters') : undefined} />}
+          ListEmptyComponent={<ScreenState title={translate(language, 'nothing')} message={translate(language, 'emptyMessage')} actionLabel={filterCount > 0 ? translate(language, 'viewAll') : undefined} onAction={filterCount > 0 ? () => handleFilterChange([], []) : undefined} />}
         ListFooterComponent={
           result.items.length > 0 ? (
             <View style={styles.pagination}>
-              <Pressable disabled={activePage <= 1 || query.isFetching} onPress={() => { setPageFiltersKey(filterKey); setPage((current) => current - 1); }} style={[styles.pageButton, activePage <= 1 && styles.disabled]}>
-                <Text style={styles.pageButtonText}>Previous</Text>
-              </Pressable>
-              <Text style={styles.pageText}>Page {result.page} of {Math.max(result.totalPages, 1)}</Text>
-              <Pressable disabled={activePage >= result.totalPages || query.isFetching} onPress={() => { setPageFiltersKey(filterKey); setPage((current) => current + 1); }} style={[styles.pageButton, activePage >= result.totalPages && styles.disabled]}>
-                <Text style={styles.pageButtonText}>Next</Text>
+               <Pressable disabled={page <= 1 || query.isFetching} onPress={() => setPage((current) => current - 1)} style={[styles.pageButton, page <= 1 && styles.disabled]}>
+                 <Text style={styles.pageButtonText}>{translate(language, 'previous')}</Text>
+               </Pressable>
+               <Text style={styles.pageText}>{translate(language, 'pageOf', { page: result.page, total: Math.max(result.totalPages, 1) })}</Text>
+               <Pressable disabled={page >= result.totalPages || query.isFetching} onPress={() => setPage((current) => current + 1)} style={[styles.pageButton, page >= result.totalPages && styles.disabled]}>
+                 <Text style={styles.pageButtonText}>{translate(language, 'next')}</Text>
               </Pressable>
             </View>
           ) : null
@@ -77,23 +72,18 @@ export default function TasksScreen() {
 
 const styles = StyleSheet.create({
   screen: { backgroundColor: '#f6f2ea', flex: 1 },
-  loading: { alignItems: 'center', backgroundColor: '#f6f2ea', flex: 1, justifyContent: 'center' },
   list: { padding: 20, paddingBottom: 36 },
   emptyList: { flexGrow: 1, padding: 20 },
   header: { paddingBottom: 24 },
   eyebrowRow: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+  headerRight: { alignItems: 'center', flexDirection: 'row', gap: 10 },
   eyebrow: { color: '#b4552d', fontSize: 11, fontWeight: '900', letterSpacing: 1.6 },
   counter: { color: '#879097', fontSize: 12, fontWeight: '700' },
-  heading: { color: '#17242b', fontSize: 37, fontWeight: '900', letterSpacing: -1.3, lineHeight: 40, marginTop: 22 },
+  heading: { color: '#17242b', fontSize: 32, fontWeight: '900', letterSpacing: -1.1, lineHeight: 35, marginTop: 18 },
   subheading: { color: '#68747a', fontSize: 15, lineHeight: 22, marginTop: 12, maxWidth: 300 },
-  actions: { alignItems: 'center', flexDirection: 'row', gap: 12, marginTop: 24 },
-  filterButton: { alignItems: 'center', backgroundColor: '#17242b', borderRadius: 12, flexDirection: 'row', gap: 9, paddingHorizontal: 16, paddingVertical: 12 },
-  filterButtonText: { color: '#fffdf8', fontSize: 14, fontWeight: '800' },
-  filterCount: { alignItems: 'center', backgroundColor: '#d9784c', borderRadius: 10, height: 20, justifyContent: 'center', minWidth: 20, paddingHorizontal: 5 },
-  filterCountText: { color: '#fffdf8', fontSize: 11, fontWeight: '900' },
-  activeFilters: { color: '#b4552d', fontSize: 13, fontWeight: '800' },
-  sectionLabel: { color: '#879097', fontSize: 11, fontWeight: '900', letterSpacing: 1.5, marginTop: 32 },
-  separator: { height: 12 },
+  filters: { marginTop: 20 },
+  sectionLabel: { color: '#879097', fontSize: 11, fontWeight: '900', letterSpacing: 1.5, marginTop: 20 },
+  separator: { height: 7 },
   pagination: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', marginTop: 24 },
   pageButton: { borderColor: '#c8c1b3', borderRadius: 10, borderWidth: 1, paddingHorizontal: 13, paddingVertical: 10 },
   pageButtonText: { color: '#17242b', fontSize: 12, fontWeight: '800' },

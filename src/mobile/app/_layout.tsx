@@ -29,7 +29,6 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="filters" options={{ title: 'Filter tasks', presentation: 'modal' }} />
         <Stack.Screen name="task/[id]" options={{ title: 'Task detail' }} />
       </Stack>
     </QueryClientProvider>
