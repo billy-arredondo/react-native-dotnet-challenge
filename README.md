@@ -34,6 +34,66 @@ docs/           Documentación del proyecto
 
 Al abrir `challenge.code-workspace` en VS Code, la raíz se muestra como `challenge` y `src/mobile` aparece como carpeta separada (`src` está excluido de la vista principal).
 
+## Inicio rápido
+
+Este flujo levanta la aplicación en Expo Web usando la API HTTP local. Requiere una instancia de SQL Server accesible en `localhost`.
+
+### 1. Preparar la base de datos
+
+Crear la base `TaskManagement` y ejecutar estos scripts, en este orden, desde SQL Server Management Studio, Azure Data Studio o `sqlcmd`:
+
+```text
+database/001_schema.sql
+database/002_stored_procedures.sql
+database/003_seed.sql
+```
+
+### 2. Configurar la conexión de la API
+
+Desde la raíz del repositorio, guardar las credenciales localmente con User Secrets. Sustituir `<tu-password>` por la contraseña real de SQL Server:
+
+```powershell
+dotnet user-secrets init --project src/api/Arpasoft.TaskManagement.Api
+dotnet user-secrets set "ConnectionStrings:TaskManagement" "Server=localhost;Database=TaskManagement;User Id=sa;Password=<tu-password>;TrustServerCertificate=True;" --project src/api/Arpasoft.TaskManagement.Api
+```
+
+### 3. Levantar la API
+
+Abrir una terminal en la raíz del repositorio y ejecutar:
+
+```powershell
+dotnet run --project src/api/Arpasoft.TaskManagement.Api/Arpasoft.TaskManagement.Api.csproj --launch-profile http
+```
+
+La API quedará disponible en `http://localhost:5181`. Verificarla en otra terminal:
+
+```powershell
+Invoke-WebRequest http://localhost:5181/health
+```
+
+Mantener esta terminal abierta.
+
+### 4. Configurar y levantar mobile
+
+En `src/mobile/.env`, usar esta URL base para Expo Web o un dispositivo que ejecute la API en el mismo equipo:
+
+```env
+EXPO_PUBLIC_API_URL=http://localhost:5181
+```
+
+La variable es una URL base; la aplicación agrega `/tasks` y `/health`. Después, desde `src/mobile/`, ejecutar:
+
+```powershell
+npm install
+npx expo start -c
+```
+
+Cuando Expo muestre el menú, pulsar `w` para abrir Expo Web. La aplicación estará disponible normalmente en `http://localhost:8081`.
+
+Para Android Emulator usar `http://10.0.2.2:5181`. Para un teléfono físico usar `http://<ip-del-equipo>:5181`, permitir el puerto `5181` en el Firewall de Windows y configurar esa URL en `.env`.
+
+La aplicación puede usar HTTPS en `7019`, pero el certificado de desarrollo de .NET normalmente solo es válido para `localhost`. Para el primer arranque se recomienda HTTP `5181`.
+
 ## Alcance
 
 La aplicación permite listar tareas, filtrarlas por estado y prioridad, paginarlas y consultar su detalle. No se contemplan autenticación, multiusuario, CRUD completo, despliegue ni CI/CD.
