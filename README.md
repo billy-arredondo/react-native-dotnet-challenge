@@ -10,6 +10,8 @@ Este repositorio implementa un desafío técnico de gestión de tareas. El backe
 - Expo Router
 - TanStack Query
 - Zustand para filtros locales de la interfaz
+- Selector de idioma English/Español persistido con Zustand
+- AsyncStorage para persistencia nativa y localStorage para web
 - Zod para validar respuestas de la API
 - `lucide-react-native`
 - .NET 10 Web API
@@ -161,7 +163,7 @@ La API permite CORS únicamente en el entorno `Development`, para que Expo Web p
 
 Las decisiones iniciales están documentadas en [`docs/architecture.md`](docs/architecture.md).
 
-La arquitectura mobile utiliza Expo con React Native y TypeScript, Expo Router, TanStack Query, Zustand, Zod y componentes nativos sin UI Kit. TanStack Query mantiene el estado remoto; Zustand mantiene únicamente los filtros locales de la interfaz; Zod valida las respuestas de la API. Expo se elige como la herramienta recomendada para iniciar aplicaciones React Native; el alcance actual no requiere código nativo personalizado ni `prebuild`.
+La arquitectura mobile utiliza Expo con React Native y TypeScript, Expo Router, TanStack Query, Zustand, Zod y componentes nativos sin UI Kit. TanStack Query mantiene el estado remoto; Zustand mantiene los filtros locales y el idioma seleccionado; el idioma se persiste con AsyncStorage en mobile y localStorage en web; Zod valida las respuestas de la API. Los filtros se muestran dentro de la vista principal y se aplican inmediatamente. Expo se elige como la herramienta recomendada para iniciar aplicaciones React Native; el alcance actual no requiere código nativo personalizado ni `prebuild`.
 
 Aunque el enunciado original menciona React Native CLI, Expo utiliza React Native oficialmente y cubre las necesidades funcionales del reto con menor configuración. Si en el futuro se requiere código nativo personalizado, el proyecto podrá evolucionar hacia un development build o utilizar `prebuild`.
 
