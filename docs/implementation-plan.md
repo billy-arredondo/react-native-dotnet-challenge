@@ -95,17 +95,15 @@ La implementación mobile comenzará después de integrar el backend y la base d
 
 ### 10.1 Bootstrap
 
-- Crear la aplicación React Native CLI dentro de `src/mobile/` con TypeScript.
-- Verificar Node.js/npm, JDK 17 y Android Studio.
-- Instalar desde Android Studio el Android SDK, una SDK Platform compatible, Build Tools, Platform-Tools, Emulator y Command-line Tools.
-- Configurar `JAVA_HOME`, `ANDROID_HOME`, `ANDROID_SDK_ROOT` y el `PATH` del SDK.
-- Crear y verificar un Android Virtual Device (AVD).
+- Crear la aplicación Expo dentro de `src/mobile/` con React Native y TypeScript.
+- Verificar Node.js/npm y Expo Go, o configurar opcionalmente un emulador Android.
+- No generar `android/` ni `ios/` mediante `prebuild` mientras no exista una necesidad de código nativo personalizado.
 - Configurar Android/iOS y una URL de API por entorno.
 - Verificar conectividad con `GET /health` y `GET /tasks`.
 
 ### 10.2 Base técnica
 
-- Configurar React Navigation.
+- Configurar Expo Router.
 - Configurar TanStack Query para el estado remoto.
 - Añadir Zustand únicamente si aparece estado local/global que no corresponda a la API.
 - Añadir `lucide-react-native` para iconos.
