@@ -89,9 +89,9 @@ Las pruebas de Infrastructure requieren Docker Engine. Si Docker no está dispon
 - Verificar que no se haya implementado frontend ni funcionalidades fuera del alcance.
 - Integrar la fase backend/DB en `main` antes de iniciar mobile.
 
-## 10. Mobile después de la integración
+## 10. Mobile
 
-La implementación mobile comenzará después de integrar el backend y la base de datos en `main`.
+La implementación mobile consume el backend ya integrado mediante sus contratos REST.
 
 ### 10.1 Bootstrap
 
@@ -99,26 +99,29 @@ La implementación mobile comenzará después de integrar el backend y la base d
 - Verificar Node.js/npm y Expo Go, o configurar opcionalmente un emulador Android.
 - No generar `android/` ni `ios/` mediante `prebuild` mientras no exista una necesidad de código nativo personalizado.
 - Configurar Android/iOS y una URL de API por entorno.
+- Configurar `EXPO_PUBLIC_API_URL` para Android Emulator, iOS Simulator o dispositivo físico.
 - Verificar conectividad con `GET /health` y `GET /tasks`.
 
 ### 10.2 Base técnica
 
 - Configurar Expo Router.
 - Configurar TanStack Query para el estado remoto.
-- Añadir Zustand únicamente si aparece estado local/global que no corresponda a la API.
+- Usar Zustand únicamente para los filtros locales de la interfaz; TanStack Query conserva el estado remoto.
+- Usar Zod para validar `TaskItemDto` y `PagedResult<TaskItemDto>` en el borde HTTP.
 - Añadir `lucide-react-native` para iconos.
 - Usar componentes nativos y estilos propios, sin React Native UI Kits.
 
 ### 10.3 Features
 
-- Implementar la lista paginada de tareas.
-- Implementar filtros por estado y prioridad.
-- Implementar navegación al detalle de una tarea.
-- Cubrir estados de carga, vacío, error y reintento.
-- Mantener el cliente alineado con los contratos de `/tasks` y `/tasks/{id}`.
+- Implementar la lista paginada de tareas. **Completado.**
+- Implementar filtros por estado y prioridad. **Completado.**
+- Implementar navegación al detalle de una tarea. **Completado.**
+- Cubrir estados de carga, vacío, error y reintento. **Completado.**
+- Mantener el cliente alineado con los contratos de `/tasks` y `/tasks/{id}`. **Completado.**
 
 ### 10.4 Validación mobile
 
 - Probar la aplicación en Android y, cuando esté disponible, iOS.
 - Verificar navegación, filtros, detalle, errores de red y adaptación a distintos tamaños de pantalla.
-- Actualizar README con los comandos de instalación, ejecución y configuración de la API mobile.
+- Ejecutar `npm run typecheck`, `npm run lint` y `npm test` desde `src/mobile/`.
+- Actualizar README con los comandos de instalación, ejecución y configuración de la API mobile. **Completado.**

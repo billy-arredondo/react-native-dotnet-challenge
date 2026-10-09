@@ -51,7 +51,8 @@ Decisiones mobile:
 - Expo con React Native y TypeScript. Aunque el enunciado original menciona React Native CLI, Expo es la herramienta recomendada oficialmente para iniciar aplicaciones React Native y cubre el alcance del reto sin añadir configuración nativa innecesaria.
 - Expo Router para navegación; no se utilizará React Router, que está orientado a aplicaciones web.
 - TanStack Query para estado remoto, cache, loading, errores y refetch de la API.
-- Zustand queda disponible para estado local/global que no pertenezca al servidor, pero no se incorporará hasta que exista una necesidad real.
+- Zustand mantiene únicamente los filtros locales de la interfaz; TanStack Query conserva el estado remoto.
+- Zod valida las respuestas de `TaskItemDto` y `PagedResult<TaskItemDto>` en el borde HTTP.
 - `lucide-react-native` para iconos.
 - Componentes nativos de React Native y estilos propios; no se utilizará un UI Kit.
 - `fetch` será suficiente para el cliente HTTP inicial. Axios se considerará solo si aporta una necesidad concreta.
@@ -140,7 +141,11 @@ src/
 │   ├── Arpasoft.TaskManagement.Application.Tests/
 │   ├── Arpasoft.TaskManagement.Infrastructure.Tests/
 │   └── Arpasoft.TaskManagement.Api.Tests/
-└── mobile/ (fase posterior)
+└── mobile/
+    ├── app/                 Expo Router routes
+    └── src/
+        ├── features/tasks/  API, queries, filters and components
+        └── shared/          HTTP client, config and shared UI
 ```
 
 ## Configuración local
@@ -150,3 +155,5 @@ La API no crea la base de datos. Requiere una instancia SQL Server accesible, la
 Para desarrollar la aplicación mobile se requiere Node.js/npm y Expo Go para la ejecución durante el desarrollo. Android Studio, el Android SDK y un Android Virtual Device (AVD) son opcionales si se utiliza un emulador local. No se generan ni mantienen directorios nativos `android/` o `ios/` mientras el proyecto permanezca en Expo estándar.
 
 Si se utiliza un emulador Android local en Windows, configurar `JAVA_HOME`, `ANDROID_HOME`, `ANDROID_SDK_ROOT` y añadir al `PATH` el JDK, `platform-tools`, `emulator` y `cmdline-tools/latest/bin`. La validación mínima es `java -version`, `adb version` y `emulator -list-avds`. Con Expo Go esta configuración puede omitirse. Para iOS se requiere macOS con Xcode.
+
+La API local puede consultarse mediante HTTPS en `https://localhost:7019`. Para Development mobile, la API también escucha HTTP en `http://0.0.0.0:5181`, evitando problemas de certificados en dispositivos físicos. Android Emulator debe usar `http://10.0.2.2:5181`; un dispositivo físico debe utilizar `http://<ip-del-equipo>:5181`.
