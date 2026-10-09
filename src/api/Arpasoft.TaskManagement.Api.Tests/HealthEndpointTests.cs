@@ -23,4 +23,17 @@ public sealed class HealthEndpointTests : IClassFixture<WebApplicationFactory<Pr
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
+
+    [Fact]
+    public async Task Options_health_allows_development_web_origin()
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Options, "/health");
+        request.Headers.Add("Origin", "http://localhost:8081");
+        request.Headers.Add("Access-Control-Request-Method", "GET");
+
+        using var response = await client.SendAsync(request);
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        Assert.Equal("*", response.Headers.GetValues("Access-Control-Allow-Origin").Single());
+    }
 }

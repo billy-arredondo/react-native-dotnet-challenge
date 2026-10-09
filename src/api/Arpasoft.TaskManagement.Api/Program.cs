@@ -16,6 +16,14 @@ public sealed class Program
         builder.Services.AddApplication();
         builder.Services.AddInfrastructure(connectionString);
         builder.Services.AddHealthChecks();
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Services.AddCors(options =>
+                options.AddPolicy("DevelopmentCors", policy =>
+                    policy.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()));
+        }
         builder.Services.AddControllers()
             .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
@@ -28,7 +36,14 @@ public sealed class Program
             app.MapOpenApi();
         }
 
-        app.UseHttpsRedirection();
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseHttpsRedirection();
+        }
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseCors("DevelopmentCors");
+        }
         app.MapControllers();
         app.MapHealthChecks("/health");
 
